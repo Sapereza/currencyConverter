@@ -8,32 +8,33 @@ function Menu(e){
 //Javascript function for the currency conversion. API will be used to
 //fetch the latest exchange rates
 
-function convertCurrency(){
-    var amount =
-    document.getElementById("amount").value;
-    var fromCurrency =
-    document.getElementById("fromCurrency").value;
-    var toCurrency =
-    document.getElementById("toCurrency").value;
-    var resultElement =
-    document.getElementById("result");
-
-    fetch(`https://v6.exchangeratesapi.io/latest?base=${fromCurrency}&symbols=${toCurrency}&access_key=e33874d3def7adf526ac1de6b6d0d220`)
-        .then(response => response.json())
-        .then(data => {
-            var rate = data.rates[toCurrency];
-            var convertedAmount = amount * rate;
-                resultElement.textContent = `${amount} 
-                 ${fromCurrency} = $
-                {convertedAmount.toFixed(2)} $
-                {toCurrency}`;
-        })
-        .catch(error => {
-            resultElement.textContent = "an error occurred durning the conversion.";
-            console.log(error);
-
-        });
+function convertCurrency() {
+    var amount = parseFloat(document.getElementById("amount").value);
+    var fromCurrency = document.getElementById("fromCurrency").value;
+    var toCurrency = document.getElementById("toCurrency").value;
+    var resultElement = document.getElementById("result");
+  
+    if (isNaN(amount)) {
+      resultElement.textContent = "Please enter a valid amount.";
+      return;
+    }
+  
+    fetch(`https://v6.exchangeratesapi.io/latest?base=${fromCurrency}&symbols=${toCurrency}&access_key=YOUR_API_KEY`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          resultElement.textContent = "An error occurred during the conversion.";
+        } else {
+          var rate = data.rates[toCurrency];
+          var convertedAmount = amount * rate;
+          resultElement.textContent = `${amount} ${fromCurrency} = ${convertedAmount.toFixed(2)} ${toCurrency}`;
         }
+      })
+      .catch(error => {
+        resultElement.textContent = "An error occurred during the conversion.";
+        console.log(error);
+      });
+  }
 
         //Function to switch currency
         function switchCurrencies() {
